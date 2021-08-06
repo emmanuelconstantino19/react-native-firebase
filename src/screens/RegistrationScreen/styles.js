@@ -11,7 +11,7 @@ export default StyleSheet.create({
     logo: {
         flex: 1,
         height: 120,
-        width: 90,
+        width: 130,
         alignSelf: "center",
         margin: 30
     },
@@ -27,7 +27,7 @@ export default StyleSheet.create({
         paddingLeft: 16
     },
     button: {
-        backgroundColor: '#788eec',
+        backgroundColor: '#006400',
         marginLeft: 30,
         marginRight: 30,
         marginTop: 20,
@@ -51,8 +51,20 @@ export default StyleSheet.create({
         color: '#2e2e2d'
     },
     footerLink: {
-        color: "#788eec",
+        color: "#006400",
         fontWeight: "bold",
         fontSize: 16
+    },
+    text: {
+        textAlign:"center",
+    },
+    mainTitle: {
+        fontSize: 25,
+        marginBottom: 10,
+        fontWeight: "bold"
+    },
+    subTitle: {
+        fontSize: 16,
+        marginBottom: 10,
     }
 })

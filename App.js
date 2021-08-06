@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { LoginScreen, HomeScreen, RegistrationScreen } from './src/screens'
 import {decode, encode} from 'base-64'
+import { Text, TouchableOpacity } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons';
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -17,7 +19,8 @@ export default function App() {
 
   useEffect(() => {
     const usersRef = firebase.firestore().collection('users');
-    firebase.auth().onAuthStateChanged(user => {
+    const authListener = firebase.auth().onAuthStateChanged(user => {
+      // user logged in
       if (user) {
         usersRef
           .doc(user.uid)
@@ -31,9 +34,12 @@ export default function App() {
             setLoading(false)
           });
       } else {
+        setUser(null)
         setLoading(false)
       }
     });
+
+    return authListener;
   }, []);
 
   if (loading) {
@@ -46,13 +52,40 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         { user ? (
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
+          <>
+            <Stack.Screen 
+              name="Home" 
+              options={{
+                headerRight: () => (
+                  <TouchableOpacity
+                    onPress={() => firebase.auth().signOut()}
+                    title="Info"
+                    color="#fff"
+                    style={{marginRight: 20}}
+                  >
+                    <MaterialIcons name="logout" size={24} color="black" />
+                  </TouchableOpacity>
+                ),
+              }}
+            >
+              {props => <HomeScreen {...props} extraData={user} />}
+            </Stack.Screen>
+            {/* <Stack.Screen name="Cash In" component={CashInScreen} />
+            <Stack.Screen name="Pay Bills" component={PayBillsScreen} />
+            <Stack.Screen name="Select Biller" component={PayBillsScreenBiller} />
+            <Stack.Screen name="Buy Load" component={BuyLoadScreen} />
+            <Stack.Screen name="Bank Transfer" component={BankTransferScreen} />
+            <Stack.Screen name="Pockket Trace" component={PockketTraceScreen} />
+            <Stack.Screen name="Pockket Bits" component={PockketBitsScreen} />
+            <Stack.Screen name="Fund Transfer" component={FundTransferScreen} />
+            <Stack.Screen name="Pay QR" component={PayQRScreen} />
+            <Stack.Screen name="Scan QR" component={ScanQRScreen} />
+            <Stack.Screen name="My Pockket QR" component={MyPockketQRScreen} /> */}
+          </>
         ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Registration" component={RegistrationScreen} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>

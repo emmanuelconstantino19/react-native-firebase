@@ -55,6 +55,9 @@ export default function RegistrationScreen({navigation}) {
                     style={styles.logo}
                     source={require('../../../assets/icon.png')}
                 />
+                <Text style={[styles.text,styles.mainTitle]}>Student Progress Monitoring</Text>
+                <Text style={[styles.text,styles.subTitle]}>Graduate Program Management</Text>
+                <Text style={[styles.text,styles.subTitle]}>University of the Philippines Los Banos</Text>
                 <TextInput
                     style={styles.input}
                     placeholder='Full Name'
@@ -100,6 +103,9 @@ export default function RegistrationScreen({navigation}) {
                 </TouchableOpacity>
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
+                </View>
+                <View style={styles.footerView}>
+                    <Text style={styles.footerText}>@2021 Institute of Computer Science, UPLB</Text>
                 </View>
             </KeyboardAwareScrollView>
         </View>
