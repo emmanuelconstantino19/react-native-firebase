@@ -67,6 +67,7 @@ export default function App() {
                     <MaterialIcons name="logout" size={24} color="black" />
                   </TouchableOpacity>
                 ),
+                headerShown: false,
               }}
             >
               {(props) => <HomeScreen {...props} extraData={user} />}
