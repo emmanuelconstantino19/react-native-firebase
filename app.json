@@ -1,12 +1,8 @@
 {
   "expo": {
-    "name": "React Native Firebase",
-    "slug": "react-native-firebase",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "Student Progress Monitoring",
+    "slug": "student-progress-monitoring",
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,13 +14,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "description": "Student Progress Monitoring Application for UP students",
-    "githubUrl": "https://github.com/emmanuelconstantino19/react-native-firebase"
+    "githubUrl": "https://github.com/emmanuelconstantino19/react-native-firebase",
+    "android": {
+      "package": "com.ebconstantino.studentprogressmonitoring"
+    }
   }
 }

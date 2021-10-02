@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   FlatList,
   Keyboard,
   Text,
@@ -10,13 +11,25 @@ import {
 } from "react-native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import { DataTable } from "react-native-paper";
-import { FontAwesome, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  AntDesign,
+  MaterialIcons,
+  Octicons,
+} from "@expo/vector-icons";
+
+import Curriculum from "../../components/Curriculum/Curriculum";
+import ActualGrades from "../../components/ActualGrades/ActualGrades";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+const Tab = createBottomTabNavigator();
 
 export default function HomeScreen(props) {
   //   const [entityText, setEntityText] = useState("");
   //   const [entities, setEntities] = useState([]);
-  // const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([]);
 
   const [acadRecords, setAcadRecords] = useState({});
   const [curriculum, setCurriculum] = useState({
@@ -71,13 +84,15 @@ export default function HomeScreen(props) {
       .onSnapshot(
         (querySnapshot) => {
           const acadRecords = {};
+          const newRecords = [];
           querySnapshot.forEach((doc) => {
             acadRecords[doc.data().courseCode] = doc.data().finalGrade;
-            // const record = doc.data();
-            // record.id = doc.id;
-            // newRecords.push(record);
+            const record = doc.data();
+            record.id = doc.id;
+            newRecords.push(record);
           });
           setAcadRecords(acadRecords);
+          setRecords(newRecords);
         },
         (error) => {
           console.log(error);
@@ -161,16 +176,17 @@ export default function HomeScreen(props) {
   };
 
   return (
-    <View style={{ backgroundColor: "#800000", flex: 1 }}>
-      <StatusBar barStyle="light-content" backgroundColor={"#800000"} />
-      <View
-        style={{
-          padding: 16,
-          // flexDirection: "row",
-          // justifyContent: "space-between",
-        }}
-      >
-        {/* <TouchableOpacity
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <StatusBar barStyle="light-content" backgroundColor={"#5A0000"} />
+      <View style={{ backgroundColor: "#5A0000" }}>
+        <View
+          style={{
+            padding: 16,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* <TouchableOpacity
           onPress={() => firebase.auth().signOut()}
           title="Info"
           color="#fff"
@@ -178,30 +194,51 @@ export default function HomeScreen(props) {
         >
           <MaterialIcons name="logout" size={24} color="white" />
         </TouchableOpacity> */}
-        <TouchableOpacity
-          onPress={() => firebase.auth().signOut()}
-          title="Info"
-          color="#fff"
-          style={{ marginLeft: "auto" }}
-          // style={{ marginRight: 20 }}
-        >
-          <MaterialIcons name="logout" size={24} color="white" />
-        </TouchableOpacity>
+          <Image
+            // style={styles.logo}
+            style={{ width: 30, height: 30 }}
+            source={require("../../../assets/icon.png")}
+          />
+          <Text style={{ color: "white", fontSize: 20, margin: "auto" }}>
+            {"Student Progress Monitoring"}
+          </Text>
+          <TouchableOpacity
+            onPress={() => firebase.auth().signOut()}
+            title="Info"
+            color="#646464"
+            // style={{ marginRight: 20 }}
+          >
+            <MaterialIcons
+              name="logout"
+              size={20}
+              color="white"
+              style={{ margin: "auto" }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{ padding: 16 }}>
-        <Text style={{ color: "white", fontSize: 30, fontWeight: "bold" }}>
-          {"Hello, "}
-          {props.extraData.fname}
-          {"!"}
-        </Text>
-        <Text style={{ color: "white", fontSize: 16, marginTop: 16 }}>
-          {props.extraData.stdNumber}
-          {"\n"}
-          {props.extraData.degreeProgram}
-        </Text>
+      <View
+        style={{
+          backgroundColor: "#800000",
+          borderBottomEndRadius: 20,
+          borderBottomStartRadius: 20,
+        }}
+      >
+        <View style={{ padding: 40 }}>
+          <Text style={{ color: "white", fontSize: 30, fontWeight: "bold" }}>
+            {"Hello, "}
+            {props.extraData.fname}
+            {"!"}
+          </Text>
+          <Text style={{ color: "white", fontSize: 16, marginTop: 16 }}>
+            {props.extraData.stdNumber}
+            {"\n"}
+            {props.extraData.degreeProgram}
+          </Text>
+        </View>
       </View>
 
-      <View
+      {/* <View
         style={{
           paddingHorizontal: 16,
           paddingVertical: 6,
@@ -215,163 +252,46 @@ export default function HomeScreen(props) {
         }}
       >
         <MaterialIcons name="search" size={24} color="white" />
-      </View>
+      </View> */}
 
-      <Text style={{ fontSize: 24, color: "white", margin: 16 }}>
-        Curriculum
-      </Text>
-      <View
+      {/* <View
         style={{
-          padding: 20,
-          backgroundColor: "white",
-          marginHorizontal: 16,
-          marginBottom: 16,
-          borderRadius: 20,
+          borderBottomColor: "#E6E6E6",
+          borderBottomWidth: 1,
         }}
-      >
-        <Text style={{ fontSize: 16 }}> First Year - 1st Semester </Text>
-        <Text style={{ fontSize: 16 }}> </Text>
-        <DataTable>
-          <DataTable.Header>
-            {/* <DataTable.Title>Term</DataTable.Title> */}
-            <DataTable.Title></DataTable.Title>
-            <DataTable.Title>Course</DataTable.Title>
-            <DataTable.Title numeric>Final Grade</DataTable.Title>
-          </DataTable.Header>
-          {/* {records &&
-            records.map((data) => {
-              return (
-                <DataTable.Row key={data.id}>
-                  <DataTable.Cell>
-                    <FontAwesome
-                      name="check-square-o"
-                      size={24}
-                      color="green"
-                    />
-                  </DataTable.Cell>
-                  <DataTable.Cell>{data.courseCode}</DataTable.Cell>
-                  <DataTable.Cell numeric>{data.finalGrade}</DataTable.Cell>
-                </DataTable.Row>
-              );
-            })} */}
+      /> */}
 
-          {curriculum["First Year"]["1st Semester"].map((course) => (
-            <DataTable.Row>
-              {" "}
-              {/*key={data.id}*/}
-              {/* <DataTable.Cell>{data.term}</DataTable.Cell> */}
-              <DataTable.Cell>
-                {acadRecords[course.courseCode] ? (
-                  <FontAwesome name="check-square-o" size={24} color="green" />
-                ) : (
-                  <FontAwesome name="square-o" size={24} color="green" />
-                )}{" "}
-              </DataTable.Cell>
-              <DataTable.Cell>{course.courseCode}</DataTable.Cell>
-              <DataTable.Cell numeric>
-                {acadRecords[course.courseCode]
-                  ? acadRecords[course.courseCode]
-                  : "--"}{" "}
-              </DataTable.Cell>
-            </DataTable.Row>
-          ))}
-        </DataTable>
-      </View>
-      <View
-        style={{
-          padding: 20,
-          backgroundColor: "white",
-          marginHorizontal: 16,
-          marginBottom: 16,
-          borderRadius: 20,
-        }}
-      >
-        <Text style={{ fontSize: 16 }}> First Year - 2nd Semester </Text>
-        {curriculum["First Year"]["2nd Semester"].map((course) => (
-          <DataTable.Row>
-            {" "}
-            {/*key={data.id}*/}
-            {/* <DataTable.Cell>{data.term}</DataTable.Cell> */}
-            <DataTable.Cell>
-              {acadRecords[course.courseCode] ? (
-                <FontAwesome name="check-square-o" size={24} color="green" />
-              ) : (
-                <FontAwesome name="square-o" size={24} color="green" />
-              )}{" "}
-            </DataTable.Cell>
-            <DataTable.Cell>{course.courseCode}</DataTable.Cell>
-            <DataTable.Cell numeric>
-              {acadRecords[course.courseCode]
-                ? acadRecords[course.courseCode]
-                : "--"}{" "}
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </View>
-
-      <View
-        style={{
-          padding: 20,
-          backgroundColor: "white",
-          marginHorizontal: 16,
-          marginBottom: 16,
-          borderRadius: 20,
-        }}
-      >
-        <Text style={{ fontSize: 16 }}> Second Year - 1st Semester </Text>
-        {curriculum["Second Year"]["1st Semester"].map((course) => (
-          <DataTable.Row>
-            {" "}
-            {/*key={data.id}*/}
-            {/* <DataTable.Cell>{data.term}</DataTable.Cell> */}
-            <DataTable.Cell>
-              {acadRecords[course.courseCode] ? (
-                <FontAwesome name="check-square-o" size={24} color="green" />
-              ) : (
-                <FontAwesome name="square-o" size={24} color="green" />
-              )}{" "}
-            </DataTable.Cell>
-            <DataTable.Cell>{course.courseCode}</DataTable.Cell>
-            <DataTable.Cell numeric>
-              {acadRecords[course.courseCode]
-                ? acadRecords[course.courseCode]
-                : "--"}{" "}
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </View>
-
-      <View
-        style={{
-          padding: 20,
-          backgroundColor: "white",
-          marginHorizontal: 16,
-          marginBottom: 16,
-          borderRadius: 20,
-        }}
-      >
-        <Text style={{ fontSize: 16 }}> Second Year - 2nd Semester </Text>
-        {curriculum["Second Year"]["2nd Semester"].map((course) => (
-          <DataTable.Row>
-            {" "}
-            {/*key={data.id}*/}
-            {/* <DataTable.Cell>{data.term}</DataTable.Cell> */}
-            <DataTable.Cell>
-              {acadRecords[course.courseCode] ? (
-                <FontAwesome name="check-square-o" size={24} color="green" />
-              ) : (
-                <FontAwesome name="square-o" size={24} color="green" />
-              )}{" "}
-            </DataTable.Cell>
-            <DataTable.Cell>{course.courseCode}</DataTable.Cell>
-            <DataTable.Cell numeric>
-              {acadRecords[course.courseCode]
-                ? acadRecords[course.courseCode]
-                : "--"}{" "}
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </View>
+      {/* Insert code here to get curriculum */}
+      <NavigationContainer independent={true}>
+        <Tab.Navigator>
+          <Tab.Screen
+            name="Plan of Study"
+            options={{
+              tabBarActiveTintColor: "green",
+              tabBarInactiveTintColor: "gray",
+              tabBarIcon: ({ focused, color, size }) => (
+                <Octicons name="checklist" size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <Curriculum curriculum={curriculum} acadRecords={acadRecords} />
+            )}
+          </Tab.Screen>
+          <Tab.Screen
+            name="Actual Courses Taken"
+            options={{
+              tabBarActiveTintColor: "green",
+              tabBarInactiveTintColor: "gray",
+              tabBarIcon: ({ focused, color, size }) => (
+                <FontAwesome name="list-ul" size={size} color={color} />
+              ),
+            }}
+          >
+            {() => <ActualGrades records={records} />}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </NavigationContainer>
 
       {/* <View
         style={{
