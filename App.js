@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { firebase } from "./src/firebase/config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
+import {
+  LoginScreen,
+  HomeScreen,
+  RegistrationScreen,
+  AdviseeGrades,
+} from "./src/screens";
 import { decode, encode } from "base-64";
 import { Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -72,6 +77,7 @@ export default function App() {
             >
               {(props) => <HomeScreen {...props} extraData={user} />}
             </Stack.Screen>
+            <Stack.Screen name="Advisee Grades" component={AdviseeGrades} />
             {/* <Stack.Screen name="Cash In" component={CashInScreen} />
             <Stack.Screen name="Pay Bills" component={PayBillsScreen} />
             <Stack.Screen name="Select Biller" component={PayBillsScreenBiller} />

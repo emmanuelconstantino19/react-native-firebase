@@ -20,6 +20,8 @@ import {
 
 import Curriculum from "../../components/Curriculum/Curriculum";
 import ActualGrades from "../../components/ActualGrades/ActualGrades";
+import Advisees from "../../components/Advisees/Advisees";
+import AddAdvisee from "../../components/AddAdvisee/AddAdvisee";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -29,6 +31,7 @@ const Tab = createBottomTabNavigator();
 export default function HomeScreen(props) {
   //   const [entityText, setEntityText] = useState("");
   //   const [entities, setEntities] = useState([]);
+  const navigation = props.navigation;
   const [records, setRecords] = useState([]);
 
   const [acadRecords, setAcadRecords] = useState({});
@@ -224,16 +227,20 @@ export default function HomeScreen(props) {
           borderBottomStartRadius: 20,
         }}
       >
-        <View style={{ padding: 40 }}>
+        <View style={{ padding: 20 }}>
           <Text style={{ color: "white", fontSize: 30, fontWeight: "bold" }}>
             {"Hello, "}
-            {props.extraData.fname}
+            {props.extraData.roles["ADVISER"] == "ADVISER"
+              ? "\n" + props.extraData.username
+              : props.extraData.fname}
             {"!"}
           </Text>
           <Text style={{ color: "white", fontSize: 16, marginTop: 16 }}>
-            {props.extraData.stdNumber}
-            {"\n"}
-            {props.extraData.degreeProgram}
+            {props.extraData.roles["ADVISER"] == "ADVISER"
+              ? "Adviser"
+              : props.extraData.stdNumber +
+                "\n" +
+                props.extraData.degreeProgram}
           </Text>
         </View>
       </View>
@@ -262,7 +269,70 @@ export default function HomeScreen(props) {
       /> */}
 
       {/* Insert code here to get curriculum */}
-      <NavigationContainer independent={true}>
+      {props.extraData.roles["ADVISER"] == "ADVISER" ? (
+        <NavigationContainer independent={true}>
+          <Tab.Navigator>
+            <Tab.Screen
+              name="Advisees"
+              options={{
+                tabBarActiveTintColor: "green",
+                tabBarInactiveTintColor: "gray",
+                tabBarIcon: ({ focused, color, size }) => (
+                  <FontAwesome name="list-ul" size={size} color={color} />
+                ),
+              }}
+            >
+              {() => (
+                <Advisees uid={props.extraData.uid} navigation={navigation} />
+              )}
+            </Tab.Screen>
+            <Tab.Screen
+              name="Add advisee"
+              options={{
+                tabBarActiveTintColor: "green",
+                tabBarInactiveTintColor: "gray",
+                tabBarIcon: ({ focused, color, size }) => (
+                  <FontAwesome name="user-plus" size={size} color={color} />
+                ),
+              }}
+            >
+              {() => <AddAdvisee uid={props.extraData.uid} />}
+            </Tab.Screen>
+          </Tab.Navigator>
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer independent={true}>
+          <Tab.Navigator>
+            <Tab.Screen
+              name="Plan of Study"
+              options={{
+                tabBarActiveTintColor: "green",
+                tabBarInactiveTintColor: "gray",
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Octicons name="checklist" size={size} color={color} />
+                ),
+              }}
+            >
+              {() => (
+                <Curriculum curriculum={curriculum} acadRecords={acadRecords} />
+              )}
+            </Tab.Screen>
+            <Tab.Screen
+              name="Actual Courses Taken"
+              options={{
+                tabBarActiveTintColor: "green",
+                tabBarInactiveTintColor: "gray",
+                tabBarIcon: ({ focused, color, size }) => (
+                  <FontAwesome name="list-ul" size={size} color={color} />
+                ),
+              }}
+            >
+              {() => <ActualGrades records={records} />}
+            </Tab.Screen>
+          </Tab.Navigator>
+        </NavigationContainer>
+      )}
+      {/* <NavigationContainer independent={true}>
         <Tab.Navigator>
           <Tab.Screen
             name="Plan of Study"
@@ -291,7 +361,7 @@ export default function HomeScreen(props) {
             {() => <ActualGrades records={records} />}
           </Tab.Screen>
         </Tab.Navigator>
-      </NavigationContainer>
+      </NavigationContainer> */}
 
       {/* <View
         style={{
